@@ -146,6 +146,16 @@ func validateWm() {
 	}
 }
 
+func SearchInput() {
+	SI := *searchInput
+	if SI != "" {
+        searchEntry.SetText(SI)
+	}
+}
+
+
+
+
 // Flags
 var cssFileName = flag.String("s", "drawer.css", "Styling: css file name")
 var targetOutput = flag.String("o", "", "name of the Output to display the drawer on (sway & Hyprland only)")
@@ -169,6 +179,7 @@ var term = flag.String("term", defaultTermIfBlank(os.Getenv("TERM"), "foot"), "T
 var wm = flag.String("wm", "", "use swaymsg exec (with 'sway' argument) or hyprctl dispatch exec (with 'hyprland') to launch programs")
 var nameLimit = flag.Int("fslen", 80, "File Search name LENgth Limit")
 var noCats = flag.Bool("nocats", false, "Disable filtering by category")
+var searchInput = flag.String("search", "", "use the string in the search input")
 var noFS = flag.Bool("nofs", false, "Disable file search")
 var resident = flag.Bool("r", false, "Leave the program resident in memory")
 var debug = flag.Bool("d", false, "Turn on Debug messages")
@@ -187,6 +198,7 @@ func main() {
 	}
 
 	validateWm()
+
 
 	// Gentle SIGTERM handler thanks to reiki4040 https://gist.github.com/reiki4040/be3705f307d3cd136e85
 	// v0.2: we also need to support SIGUSR from now on
@@ -438,6 +450,7 @@ func main() {
 		gtk.MainQuit()
 	})
 
+
 	win.Connect("key-release-event", func(_ *gtk.Window, event *gdk.Event) bool {
 		key := &gdk.EventKey{Event: event}
 		if key.KeyVal() == gdk.KEY_Escape {
@@ -565,7 +578,7 @@ func main() {
 	statusLabel, _ = gtk.LabelNew(status)
 	statusLabel.SetProperty("name", "status-label")
 	statusLineWrapper.PackStart(statusLabel, true, false, 0)
-
+	SearchInput()
 	win.ShowAll()
 
 	if !*noFS {
