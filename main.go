@@ -149,12 +149,9 @@ func validateWm() {
 func SearchInput() {
 	SI := *searchInput
 	if SI != "" {
-        searchEntry.SetText(SI)
+		searchEntry.SetText(SI)
 	}
 }
-
-
-
 
 // Flags
 var cssFileName = flag.String("s", "drawer.css", "Styling: css file name")
@@ -198,7 +195,6 @@ func main() {
 	}
 
 	validateWm()
-
 
 	// Gentle SIGTERM handler thanks to reiki4040 https://gist.github.com/reiki4040/be3705f307d3cd136e85
 	// v0.2: we also need to support SIGUSR from now on
@@ -450,7 +446,6 @@ func main() {
 		gtk.MainQuit()
 	})
 
-
 	win.Connect("key-release-event", func(_ *gtk.Window, event *gdk.Event) bool {
 		key := &gdk.EventKey{Event: event}
 		if key.KeyVal() == gdk.KEY_Escape {
@@ -578,7 +573,6 @@ func main() {
 	statusLabel, _ = gtk.LabelNew(status)
 	statusLabel.SetProperty("name", "status-label")
 	statusLineWrapper.PackStart(statusLabel, true, false, 0)
-	SearchInput()
 	win.ShowAll()
 
 	if !*noFS {
@@ -594,9 +588,11 @@ func main() {
 
 	t := time.Now()
 	log.Info(fmt.Sprintf("UI created in %v ms. Thank you for your patience.", t.Sub(timeStart).Milliseconds()))
-
+	SearchInput()
+	searchEntry.ToEntry().SetPosition(-1)
 	// Check if showing the window has been requested (SIGUSR1)
 	go func() {
+
 		for {
 			select {
 			case <-showWindowChannel:
@@ -658,7 +654,10 @@ func restoreStateAndHide() {
 	}
 
 	// clear search
-	searchEntry.SetText("")
+	SI := *searchInput
+	searchEntry.SetText("asdf")
+	SearchInput()
+	searchEntry.ToEntry().SetPosition(-1)
 
 	// clear category filter (in gotk3 it means: rebuild, as we have no filtering here)
 	appFlowBox = setUpAppsFlowBox(nil, "")

@@ -331,6 +331,7 @@ func walk(path string, d fs.DirEntry, e error) error {
 func setUpSearchEntry() *gtk.SearchEntry {
 	searchEntry, _ := gtk.SearchEntryNew()
 	searchEntry.SetPlaceholderText("Type to search")
+
 	/*searchEntry.Connect("enter-notify-event", func() {
 		cancelClose()
 	})*/
